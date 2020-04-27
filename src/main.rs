@@ -24,7 +24,9 @@ fn make_grid() -> Grid {
 
 fn parse_peg(raw: String) -> Peg {
     let split: Vec<char> = raw.chars().collect();
-    (split[0] as u8 - ('A' as u8), split[1].to_string().parse::<u8>().unwrap() - 1)
+    let res = (((split[0] as u32) - ('A' as u32)) as u8, split[1].to_string().parse::<u8>().unwrap() - 1);
+    eprintln!("parsed {} as {:?}", raw, res);
+    res
 }
 
 fn show_grid(g: Grid) -> String {
@@ -83,6 +85,7 @@ fn main() {
             let inputs = input_line.split(" ").collect::<Vec<_>>();
             let your_seg_peg_1 = parse_peg(inputs[0].trim().to_string()); // The first end of one of your segments.
             let your_seg_peg_2 = parse_peg(inputs[1].trim().to_string()); // The second end of one of your segments.
+
             my_segments.push((your_seg_peg_1, your_seg_peg_2));
         }
         let mut input_line = String::new();
