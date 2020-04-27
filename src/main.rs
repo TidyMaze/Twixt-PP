@@ -8,14 +8,21 @@ const GRID_SIZE: usize = 12;
 
 type Grid = [[u8; GRID_SIZE]; GRID_SIZE];
 
+type Peg = (u8, u8);
+
+type Segment = (Peg, Peg);
+
 fn make_grid() -> Grid {
     [[0; GRID_SIZE]; GRID_SIZE]
 }
 
-fn parse_peg(raw: String) -> (u8, u8) {
+fn parse_peg(raw: String) -> Peg {
     let split: Vec<char> = raw.chars().collect();
-    eprintln!("split {:?}", split);
     (split[0] as u8 - ('A' as u8), split[1].to_string().parse::<u8>().unwrap())
+}
+
+fn showGrid(g: Grid) -> String {
+    return g.iter().map(|l| l.iter().map(|v| v.to_string() + " ").collect::<Vec<_>>().join("")).collect::<Vec<_>>().join("\n");
 }
 
 fn main() {
@@ -29,8 +36,8 @@ fn main() {
         io::stdin().read_line(&mut input_line).unwrap();
         let num_your_pegs = parse_input!(input_line, i32); // The number of pegs you have on the board.
 
-        let my_segments: Vec<(u8, u8)> = Vec::with_capacity((GRID_SIZE * GRID_SIZE) / 2);
-        let opp_segments: Vec<(u8, u8)> = Vec::with_capacity((GRID_SIZE * GRID_SIZE) / 2);
+        let mut my_segments: Vec<Segment> = Vec::with_capacity((GRID_SIZE * GRID_SIZE) / 2);
+        let mut opp_segments: Vec<Segment> = Vec::with_capacity((GRID_SIZE * GRID_SIZE) / 2);
 
         let mut grid = make_grid();
 
@@ -42,8 +49,6 @@ fn main() {
             grid[p.1 as usize][p.0 as usize] = 1;
         }
 
-        eprintln!("grid is {:?}", grid);
-
         let mut input_line = String::new();
         io::stdin().read_line(&mut input_line).unwrap();
         let num_your_segments = parse_input!(input_line, i32); // The number of segments you have on the board.
@@ -53,6 +58,7 @@ fn main() {
             let inputs = input_line.split(" ").collect::<Vec<_>>();
             let your_seg_peg_1 = parse_peg(inputs[0].trim().to_string()); // The first end of one of your segments.
             let your_seg_peg_2 = parse_peg(inputs[1].trim().to_string()); // The second end of one of your segments.
+            my_segments.push((your_seg_peg_1, your_seg_peg_2));
         }
         let mut input_line = String::new();
         io::stdin().read_line(&mut input_line).unwrap();
@@ -72,10 +78,13 @@ fn main() {
             let inputs = input_line.split(" ").collect::<Vec<_>>();
             let his_seg_peg_1 = parse_peg(inputs[0].trim().to_string()); // The first end of one of his segments.
             let his_seg_peg_2 = parse_peg(inputs[1].trim().to_string()); // The second end of one of his segments.
+            opp_segments.push((his_seg_peg_1, his_seg_peg_2));
         }
 
         // Write an action using println!("message...");
         // To debug: eprintln!("Debug message...");
+
+        eprintln!("grid is \n{}", showGrid(grid));
 
         println!("G6 bla bla bla..."); // <Your new peg> <Optional commentary>
     }
