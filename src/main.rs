@@ -66,7 +66,7 @@ fn main() {
 
         let mut grid = make_grid();
 
-        for i in 0..num_your_pegs as usize {
+        for _ in 0..num_your_pegs as usize {
             let mut input_line = String::new();
             io::stdin().read_line(&mut input_line).unwrap();
             eprintln!("in {}", input_line);
@@ -77,7 +77,7 @@ fn main() {
         let mut input_line = String::new();
         io::stdin().read_line(&mut input_line).unwrap();
         let num_your_segments = parse_input!(input_line, i32); // The number of segments you have on the board.
-        for i in 0..num_your_segments as usize {
+        for _ in 0..num_your_segments as usize {
             let mut input_line = String::new();
             io::stdin().read_line(&mut input_line).unwrap();
             let inputs = input_line.split(" ").collect::<Vec<_>>();
@@ -88,7 +88,7 @@ fn main() {
         let mut input_line = String::new();
         io::stdin().read_line(&mut input_line).unwrap();
         let num_his_pegs = parse_input!(input_line, i32); // The number of pegs your opponent has on the board.
-        for i in 0..num_his_pegs as usize {
+        for _ in 0..num_his_pegs as usize {
             let mut input_line = String::new();
             io::stdin().read_line(&mut input_line).unwrap();
             let p = parse_peg(input_line.trim().to_string());
@@ -97,7 +97,7 @@ fn main() {
         let mut input_line = String::new();
         io::stdin().read_line(&mut input_line).unwrap();
         let num_his_segments = parse_input!(input_line, i32); // The number of segments of your opponent.
-        for i in 0..num_his_segments as usize {
+        for _ in 0..num_his_segments as usize {
             let mut input_line = String::new();
             io::stdin().read_line(&mut input_line).unwrap();
             let inputs = input_line.split(" ").collect::<Vec<_>>();
@@ -115,6 +115,7 @@ fn main() {
 
         let a = random_pick(&mut rng, &grid, my_lines);
 
+        eprintln!("{}{}", a.0, a.1);
         println!("{}{}", int_to_alpha(a.0), a.1 + 1);
         turn +=1;
     }
