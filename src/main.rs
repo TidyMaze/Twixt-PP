@@ -1,4 +1,5 @@
 use std::io;
+use rand::prelude::*;
 
 macro_rules! parse_input {
     ($x:expr, $t:ident) => ($x.trim().parse::<$t>().unwrap())
@@ -10,6 +11,8 @@ type Grid = [[u8; GRID_SIZE]; GRID_SIZE];
 
 type Peg = (u8, u8);
 
+type Coord = (u8,u8);
+
 type Segment = (Peg, Peg);
 
 fn make_grid() -> Grid {
@@ -18,14 +21,20 @@ fn make_grid() -> Grid {
 
 fn parse_peg(raw: String) -> Peg {
     let split: Vec<char> = raw.chars().collect();
-    (split[0] as u8 - ('A' as u8), split[1].to_string().parse::<u8>().unwrap())
+    (split[0] as u8 - ('A' as u8), split[1].to_string().parse::<u8>().unwrap() - 1)
 }
 
-fn showGrid(g: Grid) -> String {
+fn show_grid(g: Grid) -> String {
     return g.iter().map(|l| l.iter().map(|v| v.to_string() + " ").collect::<Vec<_>>().join("")).collect::<Vec<_>>().join("\n");
 }
 
+fn int_to_alpha(v: u8) -> char {
+    (v + ('A' as u8)) as char
+}
+
 fn main() {
+
+    let mut rng = thread_rng();
 
     // game loop
     loop {
@@ -84,8 +93,27 @@ fn main() {
         // Write an action using println!("message...");
         // To debug: eprintln!("Debug message...");
 
-        eprintln!("grid is \n{}", showGrid(grid));
+        eprintln!("grid is \n{}", show_grid(grid));
+        eprintln!("my segments are\n{:?}", my_segments);
+        eprintln!("opp segments are\n{:?}", opp_segments);
 
-        println!("G6 bla bla bla..."); // <Your new peg> <Optional commentary>
+        let a = random_pick(&mut rng, &grid);
+
+        println!("{}{}", int_to_alpha(a.0), a.1 + 1);
+    }
+
+    fn random_pick(rng: &mut ThreadRng,  g: &Grid) -> Peg {
+        loop {
+            let x: u8 = rng.gen_range(0,GRID_SIZE as u8);
+            let y: u8 = rng.gen_range(0,GRID_SIZE as u8);
+            if g[y as usize][x as usize] == 0 && (x > 0 && x < (GRID_SIZE - 1) as u8 || y > 0 && y < (GRID_SIZE - 1) as u8) {
+                return (x as u8, y as u8);
+            }
+        }
+    }
+
+    fn play_action(mut g: Grid, c: Coord, p: u8) -> Grid {
+        g[c.1 as usize][c.0 as usize] = p;
+        g
     }
 }
