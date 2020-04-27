@@ -7,11 +7,14 @@ macro_rules! parse_input {
 
 const GRID_SIZE: usize = 12;
 
+const HORIZONTAL: u8 = 1;
+const VERTICAL: u8 = 2;
+
 type Grid = [[u8; GRID_SIZE]; GRID_SIZE];
 
 type Peg = (u8, u8);
 
-type Coord = (u8,u8);
+type Coord = (u8, u8);
 
 type Segment = (Peg, Peg);
 
@@ -33,14 +36,27 @@ fn int_to_alpha(v: u8) -> char {
 }
 
 fn main() {
-
     let mut rng = thread_rng();
 
-    // game loop
+    let mut my_lines = 0;
+
+    let mut turn = 0;
     loop {
         let mut input_line = String::new();
         io::stdin().read_line(&mut input_line).unwrap();
-        let his_last_peg = input_line.trim().to_string(); // Your opponent's last peg (B3, or H10 for example), or FIRST, or SWAP.
+        let his_last_peg = input_line.trim().to_string();
+
+        if turn == 0 {
+            if his_last_peg == "FIRST" {
+                my_lines = HORIZONTAL;
+            } else if his_last_peg == "SWAP" {
+                my_lines = HORIZONTAL;
+            } else {
+                my_lines = VERTICAL;
+                turn += 1;
+            }
+        }
+
         let mut input_line = String::new();
         io::stdin().read_line(&mut input_line).unwrap();
         let num_your_pegs = parse_input!(input_line, i32); // The number of pegs you have on the board.
@@ -97,16 +113,23 @@ fn main() {
         eprintln!("my segments are\n{:?}", my_segments);
         eprintln!("opp segments are\n{:?}", opp_segments);
 
-        let a = random_pick(&mut rng, &grid);
+        let a = random_pick(&mut rng, &grid, my_lines);
 
         println!("{}{}", int_to_alpha(a.0), a.1 + 1);
+        turn +=1;
     }
 
-    fn random_pick(rng: &mut ThreadRng,  g: &Grid) -> Peg {
+    fn random_pick(rng: &mut ThreadRng, g: &Grid, my_lines: u8) -> Peg {
         loop {
-            let x: u8 = rng.gen_range(0,GRID_SIZE as u8);
-            let y: u8 = rng.gen_range(0,GRID_SIZE as u8);
-            if g[y as usize][x as usize] == 0 && (x > 0 && x < (GRID_SIZE - 1) as u8 || y > 0 && y < (GRID_SIZE - 1) as u8) {
+            let x: u8 = rng.gen_range(0, GRID_SIZE as u8);
+            let y: u8 = rng.gen_range(0, GRID_SIZE as u8);
+            if g[y as usize][x as usize] == 0 {
+                if my_lines == HORIZONTAL && (x == 0 || x == (GRID_SIZE - 1) as u8) {
+                    continue;
+                }
+                if my_lines == VERTICAL && (y == 0 || y == (GRID_SIZE - 1) as u8) {
+                    continue;
+                }
                 return (x as u8, y as u8);
             }
         }
