@@ -24,7 +24,7 @@ fn make_grid() -> Grid {
 
 fn parse_peg(raw: String) -> Peg {
     let split: Vec<char> = raw.chars().collect();
-    let res = (((split[0] as u32) - ('A' as u32)) as u8, split[1].to_string().parse::<u8>().unwrap() - 1);
+    let res = (((split[0] as u32) - ('A' as u32)) as u8, split.iter().skip(1).collect::<String>().parse::<u8>().unwrap() - 1);
     eprintln!("parsed {} as {:?}", raw, res);
     res
 }
@@ -34,7 +34,7 @@ fn show_grid(g: Grid) -> String {
 }
 
 fn int_to_alpha(v: u8) -> char {
-    (v + ('A' as u8)) as char
+    ((v as u32) + ('A' as u32)) as u8 as char
 }
 
 fn main() {
