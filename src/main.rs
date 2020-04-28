@@ -75,54 +75,52 @@ fn main() {
             }
         }
 
-        let mut input_line = String::new();
-        io::stdin().read_line(&mut input_line).unwrap();
-        let num_your_pegs = parse_input!(input_line, i32); // The number of pegs you have on the board.
-
         let mut grid = make_grid();
 
+        let mut input_line = String::new();
+        io::stdin().read_line(&mut input_line).unwrap();
+        let num_your_pegs = parse_input!(input_line, i32);
         for _ in 0..num_your_pegs as usize {
             let mut input_line = String::new();
             io::stdin().read_line(&mut input_line).unwrap();
-            eprintln!("in {}", input_line);
             let p = parse_peg(input_line.trim().to_string());
             grid[p.y as usize][p.x as usize].0 = 1;
         }
 
         let mut input_line = String::new();
         io::stdin().read_line(&mut input_line).unwrap();
-        let num_your_segments = parse_input!(input_line, i32); // The number of segments you have on the board.
+        let num_your_segments = parse_input!(input_line, i32);
         for _ in 0..num_your_segments as usize {
             let mut input_line = String::new();
             io::stdin().read_line(&mut input_line).unwrap();
             let inputs = input_line.split(" ").collect::<Vec<_>>();
-            let your_seg_peg_1 = parse_peg(inputs[0].trim().to_string()); // The first end of one of your segments.
-            let your_seg_peg_2 = parse_peg(inputs[1].trim().to_string()); // The second end of one of your segments.
-
+            let your_seg_peg_1 = parse_peg(inputs[0].trim().to_string());
+            let your_seg_peg_2 = parse_peg(inputs[1].trim().to_string());
             let index_peg = get_index_peg_relative_to(&your_seg_peg_2, &your_seg_peg_1);
 
             grid[your_seg_peg_1.y as usize][your_seg_peg_1.x as usize].0 = 1;
             grid[your_seg_peg_1.y as usize][your_seg_peg_1.x as usize].1[index_peg] = true;
         }
+
         let mut input_line = String::new();
         io::stdin().read_line(&mut input_line).unwrap();
-        let num_his_pegs = parse_input!(input_line, i32); // The number of pegs your opponent has on the board.
+        let num_his_pegs = parse_input!(input_line, i32);
         for _ in 0..num_his_pegs as usize {
             let mut input_line = String::new();
             io::stdin().read_line(&mut input_line).unwrap();
             let p = parse_peg(input_line.trim().to_string());
             grid[p.y as usize][p.x as usize].0 = 2;
         }
+
         let mut input_line = String::new();
         io::stdin().read_line(&mut input_line).unwrap();
-        let num_his_segments = parse_input!(input_line, i32); // The number of segments of your opponent.
+        let num_his_segments = parse_input!(input_line, i32);
         for _ in 0..num_his_segments as usize {
             let mut input_line = String::new();
             io::stdin().read_line(&mut input_line).unwrap();
             let inputs = input_line.split(" ").collect::<Vec<_>>();
-            let his_seg_peg_1 = parse_peg(inputs[0].trim().to_string()); // The first end of one of his segments.
-            let his_seg_peg_2 = parse_peg(inputs[1].trim().to_string()); // The second end of one of his segments.
-
+            let his_seg_peg_1 = parse_peg(inputs[0].trim().to_string());
+            let his_seg_peg_2 = parse_peg(inputs[1].trim().to_string());
             let index_peg = get_index_peg_relative_to(&his_seg_peg_2, &his_seg_peg_1);
 
             grid[his_seg_peg_1.y as usize][his_seg_peg_1.x as usize].0 = 1;
