@@ -10,7 +10,9 @@ const GRID_SIZE: usize = 12;
 const HORIZONTAL: u8 = 1;
 const VERTICAL: u8 = 2;
 
-type Grid = [[u8; GRID_SIZE]; GRID_SIZE];
+type Grid = [[(u8, [bool;8]); GRID_SIZE]; GRID_SIZE];
+
+
 
 type Peg = (u8, u8);
 
@@ -19,7 +21,7 @@ type Coord = (u8, u8);
 type Segment = (Peg, Peg);
 
 fn make_grid() -> Grid {
-    [[0; GRID_SIZE]; GRID_SIZE]
+    [[(0, [false;8]); GRID_SIZE]; GRID_SIZE]
 }
 
 fn parse_peg(raw: String) -> Peg {
@@ -30,7 +32,7 @@ fn parse_peg(raw: String) -> Peg {
 }
 
 fn show_grid(g: Grid) -> String {
-    return g.iter().map(|l| l.iter().map(|v| v.to_string() + " ").collect::<Vec<_>>().join("")).collect::<Vec<_>>().join("\n");
+    return g.iter().map(|l| l.iter().map(|(v, _)| v.to_string() + " ").collect::<Vec<_>>().join("")).collect::<Vec<_>>().join("\n");
 }
 
 fn int_to_alpha(v: u8) -> char {
@@ -73,7 +75,7 @@ fn main() {
             io::stdin().read_line(&mut input_line).unwrap();
             eprintln!("in {}", input_line);
             let p = parse_peg(input_line.trim().to_string());
-            grid[p.1 as usize][p.0 as usize] = 1;
+            grid[p.1 as usize][p.0 as usize].0 = 1;
         }
 
         let mut input_line = String::new();
@@ -95,7 +97,7 @@ fn main() {
             let mut input_line = String::new();
             io::stdin().read_line(&mut input_line).unwrap();
             let p = parse_peg(input_line.trim().to_string());
-            grid[p.1 as usize][p.0 as usize] = 2;
+            grid[p.1 as usize][p.0 as usize].0 = 2;
         }
         let mut input_line = String::new();
         io::stdin().read_line(&mut input_line).unwrap();
@@ -127,7 +129,7 @@ fn main() {
         loop {
             let x: u8 = rng.gen_range(0, GRID_SIZE as u8);
             let y: u8 = rng.gen_range(0, GRID_SIZE as u8);
-            if g[y as usize][x as usize] == 0 {
+            if g[y as usize][x as usize].0 == 0 {
                 if my_lines == HORIZONTAL && (x == 0 || x == (GRID_SIZE - 1) as u8) {
                     continue;
                 }
@@ -140,7 +142,7 @@ fn main() {
     }
 
     fn play_action(mut g: Grid, c: Coord, p: u8) -> Grid {
-        g[c.1 as usize][c.0 as usize] = p;
+        g[c.1 as usize][c.0 as usize].0 = p;
         g
     }
 }
