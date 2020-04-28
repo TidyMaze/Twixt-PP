@@ -12,13 +12,9 @@ const VERTICAL: u8 = 2;
 
 type Grid = [[(u8, [bool;8]); GRID_SIZE]; GRID_SIZE];
 
-
-
 type Peg = (u8, u8);
 
 type Coord = (u8, u8);
-
-type Segment = (Peg, Peg);
 
 fn make_grid() -> Grid {
     [[(0, [false;8]); GRID_SIZE]; GRID_SIZE]
@@ -37,6 +33,10 @@ fn show_grid(g: Grid) -> String {
 
 fn int_to_alpha(v: u8) -> char {
     ((v as u32) + ('A' as u32)) as u8 as char
+}
+
+fn get_index_peg_relative_to(_dest: Peg, _from: Peg) -> usize {
+    0 as usize
 }
 
 fn main() {
@@ -65,9 +65,6 @@ fn main() {
         io::stdin().read_line(&mut input_line).unwrap();
         let num_your_pegs = parse_input!(input_line, i32); // The number of pegs you have on the board.
 
-        let mut my_segments: Vec<Segment> = Vec::with_capacity((GRID_SIZE * GRID_SIZE) / 2);
-        let mut opp_segments: Vec<Segment> = Vec::with_capacity((GRID_SIZE * GRID_SIZE) / 2);
-
         let mut grid = make_grid();
 
         for _ in 0..num_your_pegs as usize {
@@ -88,7 +85,10 @@ fn main() {
             let your_seg_peg_1 = parse_peg(inputs[0].trim().to_string()); // The first end of one of your segments.
             let your_seg_peg_2 = parse_peg(inputs[1].trim().to_string()); // The second end of one of your segments.
 
-            my_segments.push((your_seg_peg_1, your_seg_peg_2));
+            let index_peg = get_index_peg_relative_to(your_seg_peg_2, your_seg_peg_1);
+
+            grid[your_seg_peg_1.1 as usize][your_seg_peg_1.0 as usize].0 = 1;
+            grid[your_seg_peg_1.1 as usize][your_seg_peg_1.0 as usize].1[index_peg] = true;
         }
         let mut input_line = String::new();
         io::stdin().read_line(&mut input_line).unwrap();
@@ -108,15 +108,17 @@ fn main() {
             let inputs = input_line.split(" ").collect::<Vec<_>>();
             let his_seg_peg_1 = parse_peg(inputs[0].trim().to_string()); // The first end of one of his segments.
             let his_seg_peg_2 = parse_peg(inputs[1].trim().to_string()); // The second end of one of his segments.
-            opp_segments.push((his_seg_peg_1, his_seg_peg_2));
+
+            let index_peg = get_index_peg_relative_to(his_seg_peg_2, his_seg_peg_1);
+
+            grid[his_seg_peg_1.1 as usize][his_seg_peg_1.0 as usize].0 = 1;
+            grid[his_seg_peg_1.1 as usize][his_seg_peg_1.0 as usize].1[index_peg] = true;
         }
 
         // Write an action using println!("message...");
         // To debug: eprintln!("Debug message...");
 
         eprintln!("grid is \n{}", show_grid(grid));
-        eprintln!("my segments are\n{:?}", my_segments);
-        eprintln!("opp segments are\n{:?}", opp_segments);
 
         let a = random_pick(&mut rng, &grid, my_lines);
 

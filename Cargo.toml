@@ -1,5 +1,5 @@
 [package]
-name = "Twixt-PP"
+name = "twixt_pp"
 version = "0.1.0"
 authors = ["yrolland <rolland_yann@orange.fr>"]
 edition = "2018"
