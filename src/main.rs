@@ -10,21 +10,23 @@ const GRID_SIZE: usize = 12;
 const HORIZONTAL: u8 = 1;
 const VERTICAL: u8 = 2;
 
-type Grid = [[(u8, [bool;8]); GRID_SIZE]; GRID_SIZE];
+type Grid = [[(u8, [bool; 8]); GRID_SIZE]; GRID_SIZE];
 
-type Peg = (u8, u8);
-
-type Coord = (u8, u8);
-
-fn make_grid() -> Grid {
-    [[(0, [false;8]); GRID_SIZE]; GRID_SIZE]
+struct Coord {
+    x: u8,
+    y: u8,
 }
 
-fn parse_peg(raw: String) -> Peg {
+fn make_grid() -> Grid {
+    [[(0, [false; 8]); GRID_SIZE]; GRID_SIZE]
+}
+
+fn parse_peg(raw: String) -> Coord {
     let split: Vec<char> = raw.chars().collect();
-    let res = (((split[0] as u32) - ('A' as u32)) as u8, split.iter().skip(1).collect::<String>().parse::<u8>().unwrap() - 1);
-    eprintln!("parsed {} as {:?}", raw, res);
-    res
+    Coord {
+        x: ((split[0] as u32) - ('A' as u32)) as u8,
+        y: split.iter().skip(1).collect::<String>().parse::<u8>().unwrap() - 1,
+    }
 }
 
 fn show_grid(g: Grid) -> String {
@@ -35,7 +37,7 @@ fn int_to_alpha(v: u8) -> char {
     ((v as u32) + ('A' as u32)) as u8 as char
 }
 
-fn get_index_peg_relative_to(_dest: Peg, _from: Peg) -> usize {
+fn get_index_peg_relative_to(_dest: &Coord, _from: &Coord) -> usize {
     0 as usize
 }
 
@@ -72,7 +74,7 @@ fn main() {
             io::stdin().read_line(&mut input_line).unwrap();
             eprintln!("in {}", input_line);
             let p = parse_peg(input_line.trim().to_string());
-            grid[p.1 as usize][p.0 as usize].0 = 1;
+            grid[p.y as usize][p.x as usize].0 = 1;
         }
 
         let mut input_line = String::new();
@@ -85,10 +87,10 @@ fn main() {
             let your_seg_peg_1 = parse_peg(inputs[0].trim().to_string()); // The first end of one of your segments.
             let your_seg_peg_2 = parse_peg(inputs[1].trim().to_string()); // The second end of one of your segments.
 
-            let index_peg = get_index_peg_relative_to(your_seg_peg_2, your_seg_peg_1);
+            let index_peg = get_index_peg_relative_to(&your_seg_peg_2, &your_seg_peg_1);
 
-            grid[your_seg_peg_1.1 as usize][your_seg_peg_1.0 as usize].0 = 1;
-            grid[your_seg_peg_1.1 as usize][your_seg_peg_1.0 as usize].1[index_peg] = true;
+            grid[your_seg_peg_1.y as usize][your_seg_peg_1.x as usize].0 = 1;
+            grid[your_seg_peg_1.y as usize][your_seg_peg_1.x as usize].1[index_peg] = true;
         }
         let mut input_line = String::new();
         io::stdin().read_line(&mut input_line).unwrap();
@@ -97,7 +99,7 @@ fn main() {
             let mut input_line = String::new();
             io::stdin().read_line(&mut input_line).unwrap();
             let p = parse_peg(input_line.trim().to_string());
-            grid[p.1 as usize][p.0 as usize].0 = 2;
+            grid[p.y as usize][p.x as usize].0 = 2;
         }
         let mut input_line = String::new();
         io::stdin().read_line(&mut input_line).unwrap();
@@ -109,10 +111,10 @@ fn main() {
             let his_seg_peg_1 = parse_peg(inputs[0].trim().to_string()); // The first end of one of his segments.
             let his_seg_peg_2 = parse_peg(inputs[1].trim().to_string()); // The second end of one of his segments.
 
-            let index_peg = get_index_peg_relative_to(his_seg_peg_2, his_seg_peg_1);
+            let index_peg = get_index_peg_relative_to(&his_seg_peg_2, &his_seg_peg_1);
 
-            grid[his_seg_peg_1.1 as usize][his_seg_peg_1.0 as usize].0 = 1;
-            grid[his_seg_peg_1.1 as usize][his_seg_peg_1.0 as usize].1[index_peg] = true;
+            grid[his_seg_peg_1.y as usize][his_seg_peg_1.x as usize].0 = 1;
+            grid[his_seg_peg_1.y as usize][his_seg_peg_1.x as usize].1[index_peg] = true;
         }
 
         // Write an action using println!("message...");
@@ -122,12 +124,12 @@ fn main() {
 
         let a = random_pick(&mut rng, &grid, my_lines);
 
-        eprintln!("{}{}", a.0, a.1);
-        println!("{}{}", int_to_alpha(a.0), a.1 + 1);
-        turn +=1;
+        eprintln!("{}{}", a.x, a.y);
+        println!("{}{}", int_to_alpha(a.x), a.y + 1);
+        turn += 1;
     }
 
-    fn random_pick(rng: &mut ThreadRng, g: &Grid, my_lines: u8) -> Peg {
+    fn random_pick(rng: &mut ThreadRng, g: &Grid, my_lines: u8) -> Coord {
         loop {
             let x: u8 = rng.gen_range(0, GRID_SIZE as u8);
             let y: u8 = rng.gen_range(0, GRID_SIZE as u8);
@@ -138,13 +140,13 @@ fn main() {
                 if my_lines == VERTICAL && (y == 0 || y == (GRID_SIZE - 1) as u8) {
                     continue;
                 }
-                return (x as u8, y as u8);
+                return Coord { x: x as u8, y: y as u8 };
             }
         }
     }
 
     fn play_action(mut g: Grid, c: Coord, p: u8) -> Grid {
-        g[c.1 as usize][c.0 as usize].0 = p;
+        g[c.y as usize][c.x as usize].0 = p;
         g
     }
 }
