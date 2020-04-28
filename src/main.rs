@@ -77,15 +77,7 @@ fn main() {
 
         let mut grid = make_grid();
 
-        let mut input_line = String::new();
-        io::stdin().read_line(&mut input_line).unwrap();
-        let num_your_pegs = parse_input!(input_line, i32);
-        for _ in 0..num_your_pegs as usize {
-            let mut input_line = String::new();
-            io::stdin().read_line(&mut input_line).unwrap();
-            let p = parse_peg(input_line.trim().to_string());
-            grid[p.y as usize][p.x as usize].0 = 1;
-        }
+        parse_grid(&mut grid, 1);
 
         let mut input_line = String::new();
         io::stdin().read_line(&mut input_line).unwrap();
@@ -102,15 +94,7 @@ fn main() {
             grid[p1.y as usize][p1.x as usize].1[index_peg] = true;
         }
 
-        let mut input_line = String::new();
-        io::stdin().read_line(&mut input_line).unwrap();
-        let num_his_pegs = parse_input!(input_line, i32);
-        for _ in 0..num_his_pegs as usize {
-            let mut input_line = String::new();
-            io::stdin().read_line(&mut input_line).unwrap();
-            let p = parse_peg(input_line.trim().to_string());
-            grid[p.y as usize][p.x as usize].0 = 2;
-        }
+        parse_grid(&mut grid, 2);
 
         let mut input_line = String::new();
         io::stdin().read_line(&mut input_line).unwrap();
@@ -158,5 +142,17 @@ fn main() {
     fn play_action(mut g: Grid, c: Coord, p: u8) -> Grid {
         g[c.y as usize][c.x as usize].0 = p;
         g
+    }
+}
+
+fn parse_grid(grid: &mut [[(u8, [bool; 8]); 12]; 12], num_player: u8) {
+    let mut input_line = String::new();
+    io::stdin().read_line(&mut input_line).unwrap();
+    let num_your_pegs = parse_input!(input_line, i32);
+    for _ in 0..num_your_pegs as usize {
+        let mut input_line = String::new();
+        io::stdin().read_line(&mut input_line).unwrap();
+        let p = parse_peg(input_line.trim().to_string());
+        grid[p.y as usize][p.x as usize].0 = num_player;
     }
 }
