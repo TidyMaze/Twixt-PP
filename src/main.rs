@@ -38,7 +38,19 @@ fn int_to_alpha(v: u8) -> char {
 }
 
 fn get_index_peg_relative_to(_dest: &Coord, _from: &Coord) -> usize {
-    0 as usize
+    let dy = _dest.y as i8 - _from.y as i8;
+    let dx = _dest.x as i8 - _from.y as i8;
+    match (dy, dx) {
+        (-2, -1) => 0,
+        (-2, 1) => 1,
+        (-1, 2) => 2,
+        (1, 2) => 3,
+        (2, 1) => 4,
+        (2, -1) => 5,
+        (1, -2) => 6,
+        (-1, -2) => 7,
+        _ => panic!("Cannot find peg relative offset with offsets dy={} dx={}", dy, dx)
+    }
 }
 
 fn main() {
