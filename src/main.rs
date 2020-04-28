@@ -94,12 +94,12 @@ fn main() {
             let mut input_line = String::new();
             io::stdin().read_line(&mut input_line).unwrap();
             let inputs = input_line.split(" ").collect::<Vec<_>>();
-            let your_seg_peg_1 = parse_peg(inputs[0].trim().to_string());
-            let your_seg_peg_2 = parse_peg(inputs[1].trim().to_string());
-            let index_peg = get_index_peg_relative_to(&your_seg_peg_2, &your_seg_peg_1);
+            let p1 = parse_peg(inputs[0].trim().to_string());
+            let p2 = parse_peg(inputs[1].trim().to_string());
+            let index_peg = get_index_peg_relative_to(&p2, &p1);
 
-            grid[your_seg_peg_1.y as usize][your_seg_peg_1.x as usize].0 = 1;
-            grid[your_seg_peg_1.y as usize][your_seg_peg_1.x as usize].1[index_peg] = true;
+            grid[p1.y as usize][p1.x as usize].0 = 1;
+            grid[p1.y as usize][p1.x as usize].1[index_peg] = true;
         }
 
         let mut input_line = String::new();
@@ -119,12 +119,12 @@ fn main() {
             let mut input_line = String::new();
             io::stdin().read_line(&mut input_line).unwrap();
             let inputs = input_line.split(" ").collect::<Vec<_>>();
-            let his_seg_peg_1 = parse_peg(inputs[0].trim().to_string());
-            let his_seg_peg_2 = parse_peg(inputs[1].trim().to_string());
-            let index_peg = get_index_peg_relative_to(&his_seg_peg_2, &his_seg_peg_1);
+            let p1 = parse_peg(inputs[0].trim().to_string());
+            let p2 = parse_peg(inputs[1].trim().to_string());
+            let index_peg = get_index_peg_relative_to(&p2, &p1);
 
-            grid[his_seg_peg_1.y as usize][his_seg_peg_1.x as usize].0 = 1;
-            grid[his_seg_peg_1.y as usize][his_seg_peg_1.x as usize].1[index_peg] = true;
+            grid[p1.y as usize][p1.x as usize].0 = 1;
+            grid[p1.y as usize][p1.x as usize].1[index_peg] = true;
         }
 
         // Write an action using println!("message...");
