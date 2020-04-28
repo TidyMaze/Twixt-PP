@@ -39,7 +39,7 @@ fn int_to_alpha(v: u8) -> char {
 
 fn get_index_peg_relative_to(_dest: &Coord, _from: &Coord) -> usize {
     let dy = _dest.y as i8 - _from.y as i8;
-    let dx = _dest.x as i8 - _from.y as i8;
+    let dx = _dest.x as i8 - _from.x as i8;
     match (dy, dx) {
         (-2, -1) => 0,
         (-2, 1) => 1,
