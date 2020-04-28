@@ -78,38 +78,9 @@ fn main() {
         let mut grid = make_grid();
 
         parse_grid(&mut grid, 1);
-
-        let mut input_line = String::new();
-        io::stdin().read_line(&mut input_line).unwrap();
-        let num_your_segments = parse_input!(input_line, i32);
-        for _ in 0..num_your_segments as usize {
-            let mut input_line = String::new();
-            io::stdin().read_line(&mut input_line).unwrap();
-            let inputs = input_line.split(" ").collect::<Vec<_>>();
-            let p1 = parse_peg(inputs[0].trim().to_string());
-            let p2 = parse_peg(inputs[1].trim().to_string());
-            let index_peg = get_index_peg_relative_to(&p2, &p1);
-
-            grid[p1.y as usize][p1.x as usize].0 = 1;
-            grid[p1.y as usize][p1.x as usize].1[index_peg] = true;
-        }
-
+        parse_segments(&mut grid, 1);
         parse_grid(&mut grid, 2);
-
-        let mut input_line = String::new();
-        io::stdin().read_line(&mut input_line).unwrap();
-        let num_his_segments = parse_input!(input_line, i32);
-        for _ in 0..num_his_segments as usize {
-            let mut input_line = String::new();
-            io::stdin().read_line(&mut input_line).unwrap();
-            let inputs = input_line.split(" ").collect::<Vec<_>>();
-            let p1 = parse_peg(inputs[0].trim().to_string());
-            let p2 = parse_peg(inputs[1].trim().to_string());
-            let index_peg = get_index_peg_relative_to(&p2, &p1);
-
-            grid[p1.y as usize][p1.x as usize].0 = 1;
-            grid[p1.y as usize][p1.x as usize].1[index_peg] = true;
-        }
+        parse_segments(&mut grid, 2);
 
         // Write an action using println!("message...");
         // To debug: eprintln!("Debug message...");
@@ -142,6 +113,23 @@ fn main() {
     fn play_action(mut g: Grid, c: Coord, p: u8) -> Grid {
         g[c.y as usize][c.x as usize].0 = p;
         g
+    }
+}
+
+fn parse_segments(grid: &mut [[(u8, [bool; 8]); 12]; 12], num_player: u8) {
+    let mut input_line = String::new();
+    io::stdin().read_line(&mut input_line).unwrap();
+    let num_his_segments = parse_input!(input_line, i32);
+    for _ in 0..num_his_segments as usize {
+        let mut input_line = String::new();
+        io::stdin().read_line(&mut input_line).unwrap();
+        let inputs = input_line.split(" ").collect::<Vec<_>>();
+        let p1 = parse_peg(inputs[0].trim().to_string());
+        let p2 = parse_peg(inputs[1].trim().to_string());
+        let index_peg = get_index_peg_relative_to(&p2, &p1);
+
+        grid[p1.y as usize][p1.x as usize].0 = num_player;
+        grid[p1.y as usize][p1.x as usize].1[index_peg] = true;
     }
 }
 
