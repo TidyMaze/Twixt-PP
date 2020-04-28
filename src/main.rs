@@ -119,8 +119,8 @@ fn main() {
 fn parse_segments(grid: &mut [[(u8, [bool; 8]); 12]; 12], num_player: u8) {
     let mut input_line = String::new();
     io::stdin().read_line(&mut input_line).unwrap();
-    let num_his_segments = parse_input!(input_line, i32);
-    for _ in 0..num_his_segments as usize {
+    let num = parse_input!(input_line, i32);
+    for _ in 0..num as usize {
         let mut input_line = String::new();
         io::stdin().read_line(&mut input_line).unwrap();
         let inputs = input_line.split(" ").collect::<Vec<_>>();
@@ -136,8 +136,8 @@ fn parse_segments(grid: &mut [[(u8, [bool; 8]); 12]; 12], num_player: u8) {
 fn parse_grid(grid: &mut [[(u8, [bool; 8]); 12]; 12], num_player: u8) {
     let mut input_line = String::new();
     io::stdin().read_line(&mut input_line).unwrap();
-    let num_your_pegs = parse_input!(input_line, i32);
-    for _ in 0..num_your_pegs as usize {
+    let num = parse_input!(input_line, i32);
+    for _ in 0..num as usize {
         let mut input_line = String::new();
         io::stdin().read_line(&mut input_line).unwrap();
         let p = parse_peg(input_line.trim().to_string());
