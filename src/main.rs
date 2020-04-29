@@ -12,6 +12,7 @@ const VERTICAL: u8 = 2;
 
 type Grid = [[(u8, [bool; 8]); GRID_SIZE]; GRID_SIZE];
 
+#[derive(Debug)]
 struct Coord {
     x: u8,
     y: u8,
@@ -29,8 +30,18 @@ fn parse_peg(raw: String) -> Coord {
     }
 }
 
-fn show_grid(g: Grid) -> String {
+fn show_grid(g: &Grid) -> String {
     return g.iter().map(|l| l.iter().map(|(v, _)| v.to_string() + " ").collect::<Vec<_>>().join("")).collect::<Vec<_>>().join("\n");
+}
+
+fn debug_grid(g: &Grid) -> String {
+    return g.iter().enumerate().map(|(il, l)| l.iter().enumerate().map(|(ic, (v, ns))|
+        if *v != 0 {
+            format!("{:?}: {:?}\n", Coord { x: ic as u8, y: il as u8 }, ns)
+        } else {
+            "".to_owned()
+        }
+    ).collect::<Vec<_>>().join("")).collect::<Vec<_>>().join("\n");
 }
 
 fn int_to_alpha(v: u8) -> char {
@@ -85,7 +96,8 @@ fn main() {
         // Write an action using println!("message...");
         // To debug: eprintln!("Debug message...");
 
-        eprintln!("grid is \n{}", show_grid(grid));
+        eprintln!("grid is \n{}", show_grid(&grid));
+        eprintln!("debug grid is \n{}", debug_grid(&grid));
 
         let a = random_pick(&mut rng, &grid, my_lines);
 
