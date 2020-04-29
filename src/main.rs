@@ -110,8 +110,12 @@ fn main() {
         v >= min && v <= max
     }
 
-    fn valid_coord(g: &Grid, my_lines: u8, c: &Coord) -> bool {
+    fn in_grid(c: &Coord) -> bool {
         between(0, (GRID_SIZE - 1) as u8, c.x) && between(0, (GRID_SIZE - 1) as u8, c.y)
+    }
+
+    fn valid_coord(g: &Grid, my_lines: u8, c: &Coord) -> bool {
+        in_grid(c)
             && g[c.y as usize][c.x as usize].0 == 0
             && !(my_lines == HORIZONTAL && (c.x == 0 || c.x == (GRID_SIZE - 1) as u8))
             && !(my_lines == VERTICAL && (c.y == 0 || c.y == (GRID_SIZE - 1) as u8))
@@ -127,6 +131,17 @@ fn main() {
             }
         }
     }
+
+    // fn random_pick_with_segment(rng: &mut ThreadRng, g: &Grid, my_lines: u8) -> Coord {
+    //     loop {
+    //         let x: u8 = rng.gen_range(0, GRID_SIZE as u8);
+    //         let y: u8 = rng.gen_range(0, GRID_SIZE as u8);
+    //         let c = Coord { x: x as u8, y: y as u8 };
+    //         if valid_coord(g, my_lines, &c) {
+    //             return c;
+    //         }
+    //     }
+    // }
 
     fn play_action(mut g: Grid, c: Coord, p: u8) -> Grid {
         g[c.y as usize][c.x as usize].0 = p;
