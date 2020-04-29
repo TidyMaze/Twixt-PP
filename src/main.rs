@@ -106,18 +106,19 @@ fn main() {
         turn += 1;
     }
 
+    fn valid_coord(g: &Grid, my_lines: u8, c: &Coord) -> bool {
+        g[c.y as usize][c.x as usize].0 == 0
+            && !(my_lines == HORIZONTAL && (c.x == 0 || c.x == (GRID_SIZE - 1) as u8))
+            && !(my_lines == VERTICAL && (c.y == 0 || c.y == (GRID_SIZE - 1) as u8))
+    }
+
     fn random_pick(rng: &mut ThreadRng, g: &Grid, my_lines: u8) -> Coord {
         loop {
             let x: u8 = rng.gen_range(0, GRID_SIZE as u8);
             let y: u8 = rng.gen_range(0, GRID_SIZE as u8);
-            if g[y as usize][x as usize].0 == 0 {
-                if my_lines == HORIZONTAL && (x == 0 || x == (GRID_SIZE - 1) as u8) {
-                    continue;
-                }
-                if my_lines == VERTICAL && (y == 0 || y == (GRID_SIZE - 1) as u8) {
-                    continue;
-                }
-                return Coord { x: x as u8, y: y as u8 };
+            let c = Coord { x: x as u8, y: y as u8 };
+            if valid_coord(g, my_lines, &c) {
+                return c;
             }
         }
     }
