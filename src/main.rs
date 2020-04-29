@@ -106,8 +106,13 @@ fn main() {
         turn += 1;
     }
 
+    fn between(min: u8, max: u8, v: u8) -> bool {
+        v >= min && v <= max
+    }
+
     fn valid_coord(g: &Grid, my_lines: u8, c: &Coord) -> bool {
-        g[c.y as usize][c.x as usize].0 == 0
+        between(0, (GRID_SIZE - 1) as u8, c.x) && between(0, (GRID_SIZE - 1) as u8, c.y)
+            && g[c.y as usize][c.x as usize].0 == 0
             && !(my_lines == HORIZONTAL && (c.x == 0 || c.x == (GRID_SIZE - 1) as u8))
             && !(my_lines == VERTICAL && (c.y == 0 || c.y == (GRID_SIZE - 1) as u8))
     }
