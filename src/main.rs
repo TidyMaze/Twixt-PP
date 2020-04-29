@@ -37,11 +37,11 @@ fn show_grid(g: &Grid) -> String {
 fn debug_grid(g: &Grid) -> String {
     return g.iter().enumerate().map(|(il, l)| l.iter().enumerate().map(|(ic, (v, ns))|
         if *v != 0 {
-            format!("{:?} owner by {}: {:?}\n", Coord { x: ic as u8, y: il as u8 }, v, ns)
+            format!("{:?} owned by {}: {:?}\n", Coord { x: ic as u8, y: il as u8 }, v, ns)
         } else {
             "".to_owned()
         }
-    ).collect::<Vec<_>>().join("")).collect::<Vec<_>>().join("\n");
+    ).collect::<Vec<_>>().join("")).collect::<Vec<_>>().join("");
 }
 
 fn int_to_alpha(v: u8) -> char {
