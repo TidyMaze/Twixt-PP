@@ -37,7 +37,7 @@ fn show_grid(g: &Grid) -> String {
 fn debug_grid(g: &Grid) -> String {
     return g.iter().enumerate().map(|(il, l)| l.iter().enumerate().map(|(ic, (v, ns))|
         if *v != 0 {
-            format!("{:?}: {:?}\n", Coord { x: ic as u8, y: il as u8 }, ns)
+            format!("{:?} owner by {}: {:?}\n", Coord { x: ic as u8, y: il as u8 }, v, ns)
         } else {
             "".to_owned()
         }
@@ -139,9 +139,11 @@ fn parse_segments(grid: &mut [[(u8, [bool; 8]); 12]; 12], num_player: u8) {
         let p1 = parse_peg(inputs[0].trim().to_string());
         let p2 = parse_peg(inputs[1].trim().to_string());
         let index_peg = get_index_peg_relative_to(&p2, &p1);
-
         grid[p1.y as usize][p1.x as usize].0 = num_player;
         grid[p1.y as usize][p1.x as usize].1[index_peg] = true;
+        let index_peg_rev = get_index_peg_relative_to(&p1, &p2);
+        grid[p2.y as usize][p2.x as usize].0 = num_player;
+        grid[p2.y as usize][p2.x as usize].1[index_peg_rev] = true;
     }
 }
 
